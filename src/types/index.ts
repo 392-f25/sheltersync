@@ -1,0 +1,41 @@
+export type AvailabilityStatus = 'open' | 'limited' | 'full';
+
+export type ResourceCategory = 'beds' | 'meals' | 'services' | 'urgentNeeds';
+
+export type ShelterLocation = {
+  latitude: number;
+  longitude: number;
+  address: string;
+};
+
+export type Shelter = {
+  id: string;
+  name: string;
+  distanceMiles: number;
+  location: ShelterLocation;
+  availability: {
+    bedsAvailable: number;
+    status: AvailabilityStatus;
+    meals: string;
+    services: string[];
+    urgentNeeds: string[];
+    lastUpdated: string;
+  };
+};
+
+export type ShelterUpdatePayload = {
+  shelterId: string;
+  resource: ResourceCategory;
+  status?: AvailabilityStatus;
+  bedsAvailable?: number;
+  mealNote?: string;
+  services?: string[];
+  urgentNeeds?: string[];
+  note?: string;
+};
+
+export type VolunteerUser = {
+  displayName: string;
+  email: string;
+  isAuthenticated: boolean;
+};

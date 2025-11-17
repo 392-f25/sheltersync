@@ -1,52 +1,78 @@
 # Name
 
-- The app is called TeamTime.
+- The app is called **ShelterSync**.
 
 # Users
 
-- Users are software development teams who do mob programming with drivers and navigators.
+- **Frontline shelter volunteers** who need to share real-time information about beds, meals, and essential services.  
+- **Individuals experiencing homelessness** who need fast, reliable updates on nearby shelters with available resources.
 
 # Value proposition
 
-An easy to use rotation timer for managing and tracking mob programming sessions.
+A real-time, easy-to-use platform that helps shelters publish accurate availability and helps people in crisis quickly find open beds, meals, and services—reducing uncertainty and long, exhausting trips.
 
 # Key features
 
-Simple mobile-friendly one-screen design with the app name at the top, and below it:
-  - large countdown timer, defaulting to 10 minutes, but adjustable at the start of each session,
-  - a single start/pause buttonm
-  - the team members, shuffled at the start of each session, with the first name highlighted
+ShelterSync provides a clean, mobile-first interface with two primary user modes: **Volunteer Mode** and **Guest Mode**.
+
+## Volunteer Mode
+
+A streamlined update interface for shelter staff and volunteers:
+
+- **Instant bed availability updates** (e.g., open, limited, full).
+- **Meal announcements** (e.g., “Dinner served until 8 PM”).
+- **Service listings** (showers, medical vans, casework hours).
+- **Urgent needs board** (e.g., “Need blankets”, “Low on socks”, “Hygiene kits needed”).
+
 Simple operations:
-  - Tap a name to skip or include that team member in the rotation.
-  - Tap start to start the timer, tap again to pause it.
-  - When one minute is left, timer beeps and starts flashing.
-  - When time is up, timer sounds an alarm, resets time, rotates to the next team member, and waits for start.
-Recording-keeping:
-  - At end of each turn, the app logs to the console the current time, rotation duration setting, the driver, and the navigators.
+- Select a category (Beds, Meals, Services, Urgent Needs).
+- Enter or toggle the current status.
+- Tap **Update** to instantly sync data across all users and shelters.
+
+## Guest Mode (Individuals Seeking Help)
+
+A map-first interface designed for quick decision-making:
+
+- **Nearby shelters shown on a map** with color-coded availability (Open, Limited, Full).
+- **Real-time bed counts** and meal/service updates.
+- **One-tap walking directions** to the selected shelter.
+- **View urgent needs** for those who may want to donate items.
+
+Simple operations:
+- Open app → see closest shelters.
+- Tap a shelter to view details.
+- Tap **Directions** for walking navigation.
 
 # Example scenario
 
-Here is an example session.
-
-- Alice, Bob, Cathy, and Dave are a team of developers.
-- Alice, Cathy, and Dave meet to do mob programming for 90 minutes.
-- Alice starts the app on her phone. 
-- It shows a countdown timer, set to 10 minutes, a start button, and a shuffled list of team member names with checkmarks.
-- The first name is highlighted. It happens to be Bob.
-- Alice taps Bob's nam because he is not there. The highlight moves to Dave.
-- Dave sits at the keyboard and starts the timer. He begins entering code suggested by the other team members. 
-- Pizza arrives, so Dave stops the timer and grabs a slice. After a few minutes, he starts the timer to continue his turn.
-- A beep at 9 minutes warns the team is almost time to rotate.
-- Whem time goes to zero, an alarm sounds. Dave stops. The highlight moves to Cathy
-- Cathy taps the start button to begin her turn.
+- Jordan volunteers at an overnight shelter. Guests frequently ask: *“Are there open beds?”*  
+- Previously, Jordan checked handwritten notes and walked between rooms for updates.
+- With ShelterSync, Jordan opens Volunteer Mode, selects **Beds**, and updates “5 Available.”  
+  The change syncs instantly across all devices.
+- A nearby individual opens Guest Mode and sees that a shelter 0.2 miles away has 5 open beds.
+- They tap **Directions** and walk there directly—no more traveling to full shelters.
+- Jordan now has more time to greet people, prepare spaces, and manage donations instead of constantly relaying updates.
 
 # Coding notes
 
-- Use setInterval() to implement the timer.
-- Use AudioContext to play sounds.
-- Define and import a MockAudioContext class for unit testing sounds. 
+- Use **React** and **React Router** for mode switching (Volunteer vs. Guest).
+- Use a **real-time backend** (Firebase, Supabase, or WebSockets) for syncing availability.
+- Integrate with **Mapbox** or **Google Maps** for shelter locations and directions.
+- Implement a simple auth flow for volunteers to prevent unauthorized updates.
+
 
 # Testing notes
-- Define unit tests for skipping team members in the rotation.
-- Define unit tests for when Start and Stop should appear.
-- Define unit tests for when sounds should happen.
+
+- **Unit tests**:
+- Bed availability updates propagate correctly.
+- Guest Mode displays only synchronized volunteer updates.
+- Map component renders correctly and generates navigation links.
+- Proper fallback when offline.
+
+- **Integration tests**:
+- Multi-shelter simultaneous updates.
+- Volunteer authentication flow.
+
+- **Usability tests**:
+- Quick-decision scenarios (finding open beds fast).
+- Low-connectivity and low-literacy scenarios.
