@@ -1,4 +1,5 @@
 import type { Shelter, ShelterUpdatePayload } from '../types/index.ts';
+import { publishShelterUpdate } from '../api/homelessShelters.tsx';
 
 const initialShelters: Shelter[] = [
   {
@@ -151,4 +152,13 @@ export const pushShelterUpdate = async (payload: ShelterUpdatePayload) => {
   shelters = shelters.map((shelter) =>
     shelter.id === payload.shelterId ? applyShelterUpdate(shelter, payload) : shelter,
   );
+  // Best-effort: try to persist the update to the remote API. If it fails,
+  // the local in-memory update above keeps the UI in sync (guest view will
+  // see the change).
+  try {
+    await publishShelterUpdate(payload);
+  } catch (error) {
+    // Swallow network errors — already applied locally.
+    console.error('Failed to publish shelter update to remote API', error);
+  }
 };

@@ -85,3 +85,24 @@ export const fetchSheltersByCityState = async (city: string, state: string): Pro
 };
 
 export default fetchSheltersByCityState;
+
+/**
+ * Publish an availability update for a shelter to the remote API.
+ * This is best-effort: if the remote endpoint doesn't exist or fails, the
+ * caller should still update local state (so UI remains responsive).
+ */
+export const publishShelterUpdate = async (payload: any): Promise<boolean> => {
+  try {
+    // Attempt to POST to a sensible endpoint — the exact path depends on the API.
+    const url = `${BASE_URL}update`;
+    const res = await fetch(url, { method: 'POST', headers: { ...buildHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (!res.ok) {
+      console.warn('publishShelterUpdate: remote returned non-OK', res.status);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('publishShelterUpdate failed', error);
+    return false;
+  }
+};

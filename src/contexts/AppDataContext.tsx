@@ -7,6 +7,10 @@ type AppDataContextValue = {
   shelters: Shelter[];
   publishUpdate: (payload: ShelterUpdatePayload) => Promise<void>;
   isLoading: boolean;
+  /** Replace the current shelters with the provided list (e.g. search results) */
+  replaceShelters: (next: Shelter[]) => void;
+  /** Reload shelters from the canonical fetchShelters source */
+  reloadShelters: () => Promise<void>;
 };
 
 const AppDataContext = createContext<AppDataContextValue | undefined>(undefined);
@@ -53,11 +57,27 @@ export const AppDataProvider = ({ children }: PropsWithChildren) => {
     }
   }, []);
 
+  const replaceShelters = useCallback((next: Shelter[]) => setShelters(next), []);
+
+  const reloadShelters = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const initial = await fetchShelters();
+      setShelters(initial);
+    } catch (error) {
+      console.error('Failed to reload shelters', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const value = useMemo(
     () => ({
       shelters,
       publishUpdate,
       isLoading,
+      replaceShelters,
+      reloadShelters,
     }),
     [shelters, publishUpdate, isLoading],
   );

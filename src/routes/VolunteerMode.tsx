@@ -13,10 +13,14 @@ export const VolunteerMode = () => {
   const [shelterId, setShelterId] = useState<string | undefined>(undefined);
   const [volunteer, setVolunteer] = useState<VolunteerUser | null>(null);
 
-  const activeShelter = useMemo(
-    () => shelters.find((shelter) => shelter.id === shelterId) ?? shelters[0],
-    [shelterId, shelters],
-  );
+  const activeShelter = useMemo(() => {
+    if (!shelterId || shelters.length === 0) return shelters[0];
+
+    return (
+      shelters.find((shelter) => String(shelter.id) === String(shelterId)) ??
+      shelters[0]
+    );
+  }, [shelterId, shelters]);
 
   useEffect(() => {
     if (!shelterId && shelters.length > 0) {
@@ -71,11 +75,11 @@ export const VolunteerMode = () => {
             Switch shelter
             <select
               className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-white outline-none ring-emerald-400/30 focus:ring sm:w-72"
-              value={activeShelter.id}
+              value={shelterId ?? (shelters[0]?.id?.toString() ?? '')}
               onChange={(event) => setShelterId(event.target.value)}
             >
               {shelters.map((shelter) => (
-                <option key={shelter.id} value={shelter.id}>
+                <option key={shelter.id} value={shelter.id.toString()}>
                   {shelter.name}
                 </option>
               ))}
