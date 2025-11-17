@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 @theme {
   --animate-logo-spin: logo-spin infinite 20s linear;
@@ -22,4 +23,26 @@
     @apply bg-slate-950 text-slate-50 antialiased;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
+}
+
+/* Leaflet marker highlight animation */
+@keyframes marker-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.highlighted-marker {
+  animation: marker-pulse 1.5s ease-in-out infinite;
+  z-index: 1000 !important;
+}
+
+/* Make the highlighted marker popup auto-open */
+.leaflet-marker-icon.highlighted-marker {
+  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.8));
 }
