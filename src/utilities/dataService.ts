@@ -115,7 +115,11 @@ export const applyShelterUpdate = (current: Shelter, payload: ShelterUpdatePaylo
 
 export const fetchShelters = async (): Promise<Shelter[]> => Promise.resolve([...shelters]);
 
-export const subscribeToShelters = (onUpdate: Subscriber) => {
+export const subscribeToShelters = (_onUpdate: Subscriber) => {
+  // Auto-update disabled - data will only change through manual volunteer updates
+  // Uncomment the code below to enable automatic bed availability changes every 8 seconds
+  
+  /*
   const interval = setInterval(() => {
     shelters = shelters.map((shelter) => {
       const variance = Math.random();
@@ -137,6 +141,10 @@ export const subscribeToShelters = (onUpdate: Subscriber) => {
   }, 8000);
 
   return () => clearInterval(interval);
+  */
+  
+  // Return empty cleanup function
+  return () => {};
 };
 
 export const pushShelterUpdate = async (payload: ShelterUpdatePayload) => {
