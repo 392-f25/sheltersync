@@ -1,7 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { PropsWithChildren } from 'react';
 import type { Shelter, ShelterUpdatePayload } from '../types/index.ts';
-import { applyShelterUpdate, fetchShelters, pushShelterUpdate, subscribeToShelters } from '../utilities/dataService.ts';
+import {
+  applyShelterUpdate,
+  fetchShelters,
+  pushShelterUpdate,
+  replaceShelters as replaceSheltersStore,
+  subscribeToShelters,
+} from '../utilities/dataService.ts';
 
 type AppDataContextValue = {
   shelters: Shelter[];
@@ -57,7 +63,10 @@ export const AppDataProvider = ({ children }: PropsWithChildren) => {
     }
   }, []);
 
-  const replaceShelters = useCallback((next: Shelter[]) => setShelters(next), []);
+  const replaceShelters = useCallback((next: Shelter[]) => {
+    setShelters(next);
+    replaceSheltersStore(next);
+  }, []);
 
   const reloadShelters = useCallback(async () => {
     setIsLoading(true);
@@ -79,7 +88,7 @@ export const AppDataProvider = ({ children }: PropsWithChildren) => {
       replaceShelters,
       reloadShelters,
     }),
-    [shelters, publishUpdate, isLoading],
+    [shelters, publishUpdate, isLoading, replaceShelters, reloadShelters],
   );
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;

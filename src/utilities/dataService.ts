@@ -1,64 +1,7 @@
 import type { Shelter, ShelterUpdatePayload } from '../types/index.ts';
 import { publishShelterUpdate } from '../api/homelessShelters.tsx';
 
-const initialShelters: Shelter[] = [
-  {
-    id: 'beacon-haven',
-    name: 'Beacon Haven',
-    distanceMiles: 0.2,
-    location: {
-      latitude: 41.8805,
-      longitude: -87.6292,
-      address: '123 Hope St, Chicago, IL',
-    },
-    availability: {
-      bedsAvailable: 5,
-      status: 'open',
-      meals: 'Dinner served until 8 PM. Breakfast at 7 AM.',
-      services: ['Showers', 'Casework', 'Day storage'],
-      urgentNeeds: ['Blankets', 'Socks'],
-      lastUpdated: new Date().toISOString(),
-    },
-  },
-  {
-    id: 'ashland-shelter',
-    name: 'Ashland Overnight Center',
-    distanceMiles: 0.9,
-    location: {
-      latitude: 41.8851,
-      longitude: -87.6278,
-      address: '456 Ashland Ave, Chicago, IL',
-    },
-    availability: {
-      bedsAvailable: 2,
-      status: 'limited',
-      meals: 'Sandwiches and coffee available until supplies run out.',
-      services: ['Nurse visit 6-9 PM', 'Charging station'],
-      urgentNeeds: ['Gloves', 'Hygiene kits'],
-      lastUpdated: new Date().toISOString(),
-    },
-  },
-  {
-    id: 'harbor-shelter',
-    name: 'Harbor Light Shelter',
-    distanceMiles: 1.4,
-    location: {
-      latitude: 41.8781,
-      longitude: -87.6359,
-      address: '789 Harbor Ave, Chicago, IL',
-    },
-    availability: {
-      bedsAvailable: 0,
-      status: 'full',
-      meals: 'Meal service ends at 9 PM.',
-      services: ['Laundry tokens tomorrow 10 AM', 'Case management appointments'],
-      urgentNeeds: ['Reusable water bottles'],
-      lastUpdated: new Date().toISOString(),
-    },
-  },
-];
-
-let shelters = initialShelters;
+let shelters: Shelter[] = [];
 
 type Subscriber = (nextValue: Shelter[]) => void;
 
@@ -161,4 +104,8 @@ export const pushShelterUpdate = async (payload: ShelterUpdatePayload) => {
     // Swallow network errors — already applied locally.
     console.error('Failed to publish shelter update to remote API', error);
   }
+};
+
+export const replaceShelters = (next: Shelter[]) => {
+  shelters = next;
 };
