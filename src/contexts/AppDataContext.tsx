@@ -14,7 +14,7 @@ type AppDataContextValue = {
   publishUpdate: (payload: ShelterUpdatePayload) => Promise<void>;
   isLoading: boolean;
   /** Replace the current shelters with the provided list (e.g. search results) */
-  replaceShelters: (next: Shelter[]) => void;
+  replaceShelters: (next: Shelter[]) => Promise<void>;
   /** Reload shelters from the canonical fetchShelters source */
   reloadShelters: () => Promise<void>;
 };
@@ -63,9 +63,9 @@ export const AppDataProvider = ({ children }: PropsWithChildren) => {
     }
   }, []);
 
-  const replaceShelters = useCallback((next: Shelter[]) => {
-    setShelters(next);
-    replaceSheltersStore(next);
+  const replaceShelters = useCallback(async (next: Shelter[]) => {
+    const merged = await replaceSheltersStore(next);
+    setShelters(merged);
   }, []);
 
   const reloadShelters = useCallback(async () => {
