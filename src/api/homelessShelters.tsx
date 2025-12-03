@@ -15,6 +15,7 @@
 */
 
 import type { Shelter } from '../types/index.ts';
+import { buildShelterId } from '../utilities/shelterId.ts';
 
 const BASE_URL = 'https://homeless-shelters-and-foodbanks-api.p.rapidapi.com/resources';
 
@@ -27,11 +28,11 @@ const buildHeaders = () => ({
 
 const mapToShelter = (raw: any): Shelter => {
   // Best-effort mapping; use defaults when fields are missing
-  const id = raw.id || raw._id || raw.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || String(Math.random());
   const name = raw.name || raw.title || 'Unknown shelter';
   const latitude = Number(raw.latitude ?? raw.lat ?? raw.location?.lat ?? raw.coordinates?.[1]) || 0;
   const longitude = Number(raw.longitude ?? raw.lng ?? raw.location?.lng ?? raw.coordinates?.[0]) || 0;
   const address = raw.full_address || raw.location?.address || raw.location?.display || '';
+  const id = raw.id || raw._id || buildShelterId(name, address, latitude, longitude);
   const bedsAvailable = Number(raw.bedsAvailable ?? raw.available_beds ?? raw.capacity ?? 0) || 0;
   const status = (raw.status as any) || (bedsAvailable === 0 ? 'full' : bedsAvailable < 3 ? 'limited' : 'open');
   const meals = raw.meals || raw.meal_note || '';
@@ -94,7 +95,7 @@ export default fetchSheltersByCityState;
 export const publishShelterUpdate = async (payload: any): Promise<boolean> => {
   try {
     // Attempt to POST to a sensible endpoint — the exact path depends on the API.
-    const url = `${BASE_URL}update`;
+    const url = `${BASE_URL}/update`;
     const res = await fetch(url, { method: 'POST', headers: { ...buildHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     if (!res.ok) {
       console.warn('publishShelterUpdate: remote returned non-OK', res.status);

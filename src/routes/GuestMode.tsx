@@ -100,7 +100,7 @@ export const GuestMode = () => {
     try {
       const results = await fetchSheltersByCityState(targetCity.trim(), normalizedState);
       // Replace the global shelters so VolunteerMode and other areas reflect the search results
-      replaceShelters(results);
+      await replaceShelters(results);
     } catch (err: any) {
       setSearchError(err?.message || 'Search failed');
     } finally {

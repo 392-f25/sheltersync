@@ -48,13 +48,6 @@ export const ShelterCard = ({ shelter, isFocused = false, onSelect }: ShelterCar
       >
         Directions
       </a>
-      <button
-        className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
-        type="button"
-        onClick={() => onSelect?.(shelter.id)}
-      >
-        Focus
-      </button>
     </div>
   </article>
 );
