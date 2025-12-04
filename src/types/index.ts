@@ -13,6 +13,8 @@ export type Shelter = {
   name: string;
   distanceMiles: number;
   location: ShelterLocation;
+  /** Optional resource type reported by upstream API (e.g. 'foodbank' or 'shelter') */
+  type?: 'shelter' | 'foodbank' | 'other';
   availability: {
     bedsAvailable: number;
     status: AvailabilityStatus;
