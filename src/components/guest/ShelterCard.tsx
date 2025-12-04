@@ -49,5 +49,42 @@ export const ShelterCard = ({ shelter, isFocused = false, onSelect }: ShelterCar
         Directions
       </a>
     </div>
+
+    {/* Last-updated / availability context */}
+    <div className="mt-3 text-sm">
+      {(() => {
+        const raw = shelter.availability.lastUpdated;
+        const date = raw ? new Date(raw) : null;
+        const isValid = date instanceof Date && !isNaN(date.getTime());
+        const now = new Date();
+        const ageMs = isValid ? now.getTime() - date.getTime() : Infinity;
+        const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+
+        // human-friendly relative time
+        const seconds = Math.floor(ageMs / 1000);
+        if (!isValid) {
+          return (
+            <p className="text-xs font-semibold text-rose-400">Information may be out of date — last update unknown</p>
+          );
+        }
+
+        if (seconds < 60) {
+          return <p className="text-xs text-slate-300">Updated just now</p>;
+        }
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return <p className="text-xs text-slate-300">Updated {minutes}m ago</p>;
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return <p className="text-xs text-slate-300">Updated {hours}h ago</p>;
+        const days = Math.floor(hours / 24);
+
+        if (ageMs > TWO_DAYS_MS) {
+          return (
+            <p className="text-xs text-amber-300">Updated {days}d ago — information may be out of date</p>
+          );
+        }
+
+        return <p className="text-xs text-slate-300">Updated {days}d ago</p>;
+      })()}
+    </div>
   </article>
 );

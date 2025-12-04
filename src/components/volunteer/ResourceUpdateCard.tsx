@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { AvailabilityStatus, ResourceCategory, ShelterUpdatePayload } from '../../types/index.ts';
 
 type ResourceUpdateCardProps = {
@@ -9,25 +9,54 @@ type ResourceUpdateCardProps = {
   helper: string;
   onSubmit: (payload: ShelterUpdatePayload) => Promise<void>;
   isDisabled?: boolean;
+  // Optional initial values pulled from the shelter so the form reflects the
+  // currently-selected shelter instead of global defaults.
+  initialBedsAvailable?: number;
+  initialStatus?: AvailabilityStatus;
+  initialMealNote?: string;
+  initialServices?: string;
+  initialUrgentNeeds?: string;
 };
 
 const statusOptions: AvailabilityStatus[] = ['open', 'limited', 'full'];
 
-export const ResourceUpdateCard = ({ shelterId, resource, title, helper, onSubmit, isDisabled = false }: ResourceUpdateCardProps) => {
-  const [bedsAvailable, setBedsAvailable] = useState<number>(5);
-  const [status, setStatus] = useState<AvailabilityStatus>('open');
-  const [mealNote, setMealNote] = useState<string>('Dinner served until 8 PM.');
-  const [services, setServices] = useState<string>('Showers, Casework, Charging');
-  const [urgentNeeds, setUrgentNeeds] = useState<string>('Blankets, Socks');
+export const ResourceUpdateCard = ({
+  shelterId,
+  resource,
+  title,
+  helper,
+  onSubmit,
+  isDisabled = false,
+  initialBedsAvailable,
+  initialStatus,
+  initialMealNote,
+  initialServices,
+  initialUrgentNeeds,
+}: ResourceUpdateCardProps) => {
+  const [bedsAvailable, setBedsAvailable] = useState<number>(initialBedsAvailable ?? 5);
+  const [status, setStatus] = useState<AvailabilityStatus>(initialStatus ?? 'open');
+  const [mealNote, setMealNote] = useState<string>(initialMealNote ?? 'Dinner served until 8 PM.');
+  const [services, setServices] = useState<string>(initialServices ?? 'Showers, Casework, Charging');
+  const [urgentNeeds, setUrgentNeeds] = useState<string>(initialUrgentNeeds ?? 'Blankets, Socks');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const reset = () => {
-    setBedsAvailable(5);
-    setStatus('open');
-    setMealNote('');
-    setServices('');
-    setUrgentNeeds('');
+    setBedsAvailable(initialBedsAvailable ?? 5);
+    setStatus(initialStatus ?? 'open');
+    setMealNote(initialMealNote ?? '');
+    setServices(initialServices ?? '');
+    setUrgentNeeds(initialUrgentNeeds ?? '');
   };
+
+  // When the selected shelter changes, update form fields to reflect the
+  // new shelter values so the form doesn't jump back to defaults.
+  useEffect(() => {
+    setBedsAvailable(initialBedsAvailable ?? 5);
+    setStatus(initialStatus ?? 'open');
+    setMealNote(initialMealNote ?? '');
+    setServices(initialServices ?? '');
+    setUrgentNeeds(initialUrgentNeeds ?? '');
+  }, [shelterId, initialBedsAvailable, initialStatus, initialMealNote, initialServices, initialUrgentNeeds]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

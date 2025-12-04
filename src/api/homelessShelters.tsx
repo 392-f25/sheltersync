@@ -54,7 +54,10 @@ const mapToShelter = (raw: any): Shelter => {
       meals: meals || 'No meal info',
       services,
       urgentNeeds,
-      lastUpdated: raw.lastUpdated || raw.updated_at || new Date().toISOString(),
+      // Only use upstream timestamp when explicitly provided. If the upstream API
+      // doesn't include a timestamp, leave `lastUpdated` empty so the UI treats
+      // the shelter as not recently updated by volunteers.
+      lastUpdated: raw.lastUpdated || raw.updated_at || '',
     },
   };
 };
