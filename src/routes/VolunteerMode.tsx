@@ -125,6 +125,8 @@ export const VolunteerMode = () => {
           title="Bed availability"
           helper="Toggle open, limited, or full with current bed count."
           onSubmit={handleChange}
+          initialBedsAvailable={activeShelter.availability.bedsAvailable}
+          initialStatus={activeShelter.availability.status}
           isDisabled={!volunteer}
         />
         <ResourceUpdateCard
@@ -133,6 +135,7 @@ export const VolunteerMode = () => {
           title="Meal announcements"
           helper="Share when meals start and end or when supplies run low."
           onSubmit={handleChange}
+          initialMealNote={activeShelter.availability.meals}
           isDisabled={!volunteer}
         />
         <ResourceUpdateCard
@@ -141,6 +144,7 @@ export const VolunteerMode = () => {
           title="Services"
           helper="Update available services: showers, medical van, casework hours."
           onSubmit={handleChange}
+          initialServices={activeShelter.availability.services.join(', ')}
           isDisabled={!volunteer}
         />
         <ResourceUpdateCard
@@ -149,6 +153,7 @@ export const VolunteerMode = () => {
           title="Urgent needs"
           helper="Request donations like blankets, socks, or hygiene kits."
           onSubmit={handleChange}
+          initialUrgentNeeds={activeShelter.availability.urgentNeeds.join(', ')}
           isDisabled={!volunteer}
         />
       </div>
