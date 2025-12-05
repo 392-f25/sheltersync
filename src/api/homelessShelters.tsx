@@ -48,6 +48,14 @@ const mapToShelter = (raw: any): Shelter => {
       longitude,
       address,
     },
+    // Map explicit `type` when provided by the upstream API (prefer raw.type).
+    type: (() => {
+      const candidate = String(raw.type ?? raw.resource_type ?? raw.category ?? '').trim().toLowerCase();
+      if (!candidate) return undefined;
+      if (candidate === 'foodbank' || candidate.includes('food')) return 'foodbank';
+      if (candidate === 'shelter' || candidate.includes('shelter')) return 'shelter';
+      return 'other';
+    })(),
     availability: {
       bedsAvailable,
       status: status === 'open' || status === 'limited' || status === 'full' ? status : 'open',

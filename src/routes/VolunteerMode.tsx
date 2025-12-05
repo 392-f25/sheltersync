@@ -150,7 +150,7 @@ export const VolunteerMode = () => {
               <p>Signed in as {user.displayName}</p>
               <p className="text-emerald-200/80">
                 Role: {user.role === 'superAdmin' ? 'Admin (all shelters)' : 'Volunteer'}
-                {accessHelper ? ` • ${accessHelper}` : ''}
+                {accessHelper ? ` - ${accessHelper}` : ''}
               </p>
             </div>
           ) : (
@@ -189,6 +189,8 @@ export const VolunteerMode = () => {
           onSubmit={handleChange}
           isDisabled={!user || !isAuthorizedForActiveShelter}
           disabledReason={disabledReason}
+          initialBedsAvailable={activeShelter.availability.bedsAvailable}
+          initialStatus={activeShelter.availability.status}
         />
         <ResourceUpdateCard
           shelterId={activeShelter.id}
@@ -198,6 +200,7 @@ export const VolunteerMode = () => {
           onSubmit={handleChange}
           isDisabled={!user || !isAuthorizedForActiveShelter}
           disabledReason={disabledReason}
+          initialMealNote={activeShelter.availability.meals}
         />
         <ResourceUpdateCard
           shelterId={activeShelter.id}
@@ -207,6 +210,7 @@ export const VolunteerMode = () => {
           onSubmit={handleChange}
           isDisabled={!user || !isAuthorizedForActiveShelter}
           disabledReason={disabledReason}
+          initialServices={activeShelter.availability.services.join(', ')}
         />
         <ResourceUpdateCard
           shelterId={activeShelter.id}
@@ -216,6 +220,7 @@ export const VolunteerMode = () => {
           onSubmit={handleChange}
           isDisabled={!user || !isAuthorizedForActiveShelter}
           disabledReason={disabledReason}
+          initialUrgentNeeds={activeShelter.availability.urgentNeeds.join(', ')}
         />
       </div>
 

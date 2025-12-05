@@ -24,7 +24,7 @@ export const UrgentNeedsBoard = ({ shelters }: UrgentNeedsBoardProps) => {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">Urgent needs</p>
           <p className="text-sm text-amber-100">Support volunteers with immediate supply requests.</p>
         </div>
-        <span className="rounded-full bg-amber-400/30 px-3 py-1 text-xs font-semibold text-amber-900">
+        <span className="rounded-full bg-amber-400/30 px-3 py-1 text-xs font-semibold text-amber-50">
           {needs.length} items
         </span>
       </div>
@@ -38,7 +38,7 @@ export const UrgentNeedsBoard = ({ shelters }: UrgentNeedsBoardProps) => {
               className="inline-flex items-center gap-2 rounded-full bg-amber-400/20 px-3 py-1 text-xs font-semibold text-amber-50 ring-1 ring-amber-300/50"
             >
               {need.label}
-              <span className="rounded-full bg-amber-300 px-2 py-0.5 text-[11px] text-amber-900">{need.count}</span>
+              <span className="rounded-full bg-amber-300 px-2 py-0.5 text-[11px] font-bold text-slate-900">{need.count}</span>
             </span>
           ))
         )}

@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { AvailabilityStatus, ResourceCategory, ShelterUpdatePayload } from '../../types/index.ts';
 
 type ResourceUpdateCardProps = {
@@ -10,6 +10,12 @@ type ResourceUpdateCardProps = {
   onSubmit: (payload: ShelterUpdatePayload) => Promise<void>;
   isDisabled?: boolean;
   disabledReason?: string;
+  /** Optional initial values so the form reflects the selected shelter instead of hard defaults */
+  initialBedsAvailable?: number;
+  initialStatus?: AvailabilityStatus;
+  initialMealNote?: string;
+  initialServices?: string;
+  initialUrgentNeeds?: string;
 };
 
 const statusOptions: AvailabilityStatus[] = ['open', 'limited', 'full'];
@@ -22,21 +28,35 @@ export const ResourceUpdateCard = ({
   onSubmit,
   isDisabled = false,
   disabledReason,
+  initialBedsAvailable,
+  initialStatus,
+  initialMealNote,
+  initialServices,
+  initialUrgentNeeds,
 }: ResourceUpdateCardProps) => {
-  const [bedsAvailable, setBedsAvailable] = useState<number>(5);
-  const [status, setStatus] = useState<AvailabilityStatus>('open');
-  const [mealNote, setMealNote] = useState<string>('Dinner served until 8 PM.');
-  const [services, setServices] = useState<string>('Showers, Casework, Charging');
-  const [urgentNeeds, setUrgentNeeds] = useState<string>('Blankets, Socks');
+  const [bedsAvailable, setBedsAvailable] = useState<number>(initialBedsAvailable ?? 5);
+  const [status, setStatus] = useState<AvailabilityStatus>(initialStatus ?? 'open');
+  const [mealNote, setMealNote] = useState<string>(initialMealNote ?? 'Dinner served until 8 PM.');
+  const [services, setServices] = useState<string>(initialServices ?? 'Showers, Casework, Charging');
+  const [urgentNeeds, setUrgentNeeds] = useState<string>(initialUrgentNeeds ?? 'Blankets, Socks');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const reset = () => {
-    setBedsAvailable(5);
-    setStatus('open');
-    setMealNote('');
-    setServices('');
-    setUrgentNeeds('');
+    setBedsAvailable(initialBedsAvailable ?? 5);
+    setStatus(initialStatus ?? 'open');
+    setMealNote(initialMealNote ?? '');
+    setServices(initialServices ?? '');
+    setUrgentNeeds(initialUrgentNeeds ?? '');
   };
+
+  // When the selected shelter changes, update form fields to reflect its current values.
+  useEffect(() => {
+    setBedsAvailable(initialBedsAvailable ?? 5);
+    setStatus(initialStatus ?? 'open');
+    setMealNote(initialMealNote ?? '');
+    setServices(initialServices ?? '');
+    setUrgentNeeds(initialUrgentNeeds ?? '');
+  }, [shelterId, initialBedsAvailable, initialStatus, initialMealNote, initialServices, initialUrgentNeeds]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -173,7 +193,7 @@ export const ResourceUpdateCard = ({
           className="rounded-full bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
           disabled={isSubmitting || isDisabled}
         >
-          {isSubmitting ? 'Updating…' : 'Update'}
+          {isSubmitting ? 'Updating.' : 'Update'}
         </button>
       </div>
     </form>

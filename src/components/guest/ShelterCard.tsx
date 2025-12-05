@@ -21,7 +21,14 @@ export const ShelterCard = ({ shelter, isFocused = false, onSelect }: ShelterCar
         <p className="text-sm text-slate-300">{shelter.location.address}</p>
         <p className="text-xs text-slate-400">{shelter.distanceMiles.toFixed(1)} miles away</p>
       </div>
-      <StatusBadge status={shelter.availability.status} />
+      <div className="flex flex-col items-end gap-2">
+        <StatusBadge status={shelter.availability.status} />
+        {shelter.type ? (
+          <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-200">
+            {shelter.type === 'foodbank' ? 'Foodbank' : shelter.type === 'shelter' ? 'Shelter' : 'Other'}
+          </span>
+        ) : null}
+      </div>
     </div>
 
     <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-200">

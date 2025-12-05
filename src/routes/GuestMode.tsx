@@ -30,6 +30,10 @@ export const GuestMode = () => {
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
 
+  // Quick filters for resource type
+  const [showShelters, setShowShelters] = useState(true);
+  const [showFoodbanks, setShowFoodbanks] = useState(true);
+
   const normalizeState = (input: string) => {
     const trimmed = input.trim();
     if (trimmed.length === 2) return trimmed.toUpperCase();
@@ -107,6 +111,15 @@ export const GuestMode = () => {
       setSearching(false);
     }
   };
+
+  const filteredShelters = useMemo(() => {
+    return shelters.filter((s) => {
+      const t = s.type ?? 'shelter';
+      if (t === 'foodbank') return showFoodbanks;
+      if (t === 'shelter' || t === 'other') return showShelters;
+      return showShelters || showFoodbanks;
+    });
+  }, [shelters, showShelters, showFoodbanks]);
 
   const handleSearch = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -194,12 +207,23 @@ export const GuestMode = () => {
         </button>
       </form>
 
+      <div className="flex items-center gap-4">
+        <label className="inline-flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={showShelters} onChange={(e) => setShowShelters(e.target.checked)} />
+          <span>Shelters</span>
+        </label>
+        <label className="inline-flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={showFoodbanks} onChange={(e) => setShowFoodbanks(e.target.checked)} />
+          <span>Foodbanks</span>
+        </label>
+      </div>
+
       {geoStatus === 'locating' && <p className="text-sm text-slate-300">Detecting your location…</p>}
       {geoError && <div className="text-sm text-red-400">{geoError}</div>}
 
       <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <ShelterList shelters={shelters} focusedId={focusedId} onSelect={setFocusedId} />
-        <MapPreview shelters={shelters} highlightedId={focusedId} onSelect={setFocusedId} />
+        <ShelterList shelters={filteredShelters} focusedId={focusedId} onSelect={setFocusedId} />
+        <MapPreview shelters={filteredShelters} highlightedId={focusedId} onSelect={setFocusedId} />
       </div>
 
       {searchError && <div className="text-sm text-red-400">{searchError}</div>}
