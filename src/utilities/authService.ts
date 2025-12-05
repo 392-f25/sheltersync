@@ -104,12 +104,15 @@ export const fetchVolunteerAccessDirectory = async (): Promise<VolunteerAccessRe
     }
   >;
 
-  return Object.values(data).map((entry) => ({
-    email: entry.email,
-    shelterIds: extractShelterIds(entry),
-    updatedAt: entry.updatedAt,
-    updatedBy: entry.updatedBy ?? null,
-  }));
+  return Object.values(data)
+    .map((entry) => ({
+      email: entry.email,
+      shelterIds: extractShelterIds(entry),
+      updatedAt: entry.updatedAt,
+      updatedBy: entry.updatedBy ?? null,
+    }))
+    // Hide entries that no longer have any shelter access
+    .filter((record) => record.shelterIds.length > 0);
 };
 
 export const saveVolunteerAccess = async (email: string, shelterIds: string[], updatedBy?: string | null) => {
