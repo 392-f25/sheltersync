@@ -19,6 +19,9 @@ export const NavBar = () => (
       <NavLink to="/volunteer" className={navLinkClass}>
         Volunteer Mode
       </NavLink>
+      <NavLink to="/admin" className={navLinkClass}>
+        Admin
+      </NavLink>
     </nav>
   </header>
 );

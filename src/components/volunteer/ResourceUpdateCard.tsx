@@ -9,11 +9,20 @@ type ResourceUpdateCardProps = {
   helper: string;
   onSubmit: (payload: ShelterUpdatePayload) => Promise<void>;
   isDisabled?: boolean;
+  disabledReason?: string;
 };
 
 const statusOptions: AvailabilityStatus[] = ['open', 'limited', 'full'];
 
-export const ResourceUpdateCard = ({ shelterId, resource, title, helper, onSubmit, isDisabled = false }: ResourceUpdateCardProps) => {
+export const ResourceUpdateCard = ({
+  shelterId,
+  resource,
+  title,
+  helper,
+  onSubmit,
+  isDisabled = false,
+  disabledReason,
+}: ResourceUpdateCardProps) => {
   const [bedsAvailable, setBedsAvailable] = useState<number>(5);
   const [status, setStatus] = useState<AvailabilityStatus>('open');
   const [mealNote, setMealNote] = useState<string>('Dinner served until 8 PM.');
@@ -155,7 +164,9 @@ export const ResourceUpdateCard = ({ shelterId, resource, title, helper, onSubmi
 
       <div className="mt-4 flex items-center justify-between">
         <p className="text-xs text-slate-400">
-          {isDisabled ? 'Sign in to publish updates for this shelter.' : 'Changes sync to guests immediately.'}
+          {isDisabled
+            ? disabledReason || 'Sign in to publish updates for this shelter.'
+            : 'Changes sync to guests immediately.'}
         </p>
         <button
           type="submit"

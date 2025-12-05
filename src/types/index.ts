@@ -34,8 +34,21 @@ export type ShelterUpdatePayload = {
   note?: string;
 };
 
+export type UserRole = 'volunteer' | 'superAdmin';
+
 export type VolunteerUser = {
+  uid: string;
   displayName: string;
   email: string;
   isAuthenticated: boolean;
+  role: UserRole;
+  /** Shelter IDs the volunteer can update. Super admins can access all shelters regardless of this list. */
+  allowedShelterIds: string[];
+};
+
+export type VolunteerAccessRecord = {
+  email: string;
+  shelterIds: string[];
+  updatedAt?: string;
+  updatedBy?: string | null;
 };
